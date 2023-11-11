@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from scipy.stats import ttest_ind
+from scipy.stats import pearsonr
 
 
 cols = ['CreditScore', 'Geography', 'Gender', 'Age', 'Tenure', 'Balance', 'NumOfProducts', 'IsActiveMember', 'EstimatedSalary', 'Exited']
@@ -30,17 +30,10 @@ plt.show()
 # Разделим данные на две группы: Франция и Германия
 credit_france = df_churn[df_churn['Geography'] == 'France']['CreditScore']
 credit_germany = df_churn[df_churn['Geography'] == 'Germany']['CreditScore']
-
+str1 = df_churn["Age"]
+str2 = df_churn["CreditScore"]
 # Проведем t-тест
-t_stat, p_value = ttest_ind(credit_france, credit_germany)
-
+corr, _ = pearsonr(str1, str2)
+print("Коэффициент корелляции: ", corr)
 # Выведем результаты теста
-print(f'T-статистика: {t_stat}')
-print(f'p-значение: {p_value}')
-
-# Проверим статистическую значимость различий
-alpha = 0.05
-if p_value < alpha:
-    print("Отвергаем нулевую гипотезу: средние значения различны.")
-else:
-    print("Не отвергаем нулевую гипотезу: нет статистически значимых различий.")
+print(df_churn.corr(method='pearson', min_periods=1, numeric_only=True))
